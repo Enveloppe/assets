@@ -14,6 +14,7 @@ function UrlExists(url, type_url) {
   if (ref.includes("%5C")) {
     ref = ref.replace(/%5C/g, "/");
   }
+  ref = ref.replace(/\.md$/, '');
   ref = decodeURI(ref);
   if (type_url === 0) {
     url.href = ref;
