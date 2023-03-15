@@ -14,8 +14,7 @@ function UrlExists(url, type_url) {
   if (ref.includes("%5C")) {
     ref = ref.replace(/%5C/g, "/");
   }
-  ref = ref.replace(/\.md$/, '');
-  ref = decodeURI(ref);
+  ref = decodeURI(ref.replace(/\.md$/, ''));
   if (type_url === 0) {
     url.href = ref;
     url.title = title;
@@ -49,7 +48,6 @@ function UrlExists(url, type_url) {
 }
 
 var p_search = /\.{2}\//gi;
-const not_found = [];
 var ht = document.querySelectorAll("a:not(img)");
 for (var i = 0; i < ht.length; i++) {
   if (
