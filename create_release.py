@@ -30,5 +30,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("version", help="Version to create tag for")
     args = parser.parse_args()
+    os.system("npm run gulp")
+    os.system("git add dist/")
+    os.system("git commit -m 'chore(dist): update dist'")
     generate_changelog(args.version)
     create_tag(args.version)
