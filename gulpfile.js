@@ -3,7 +3,7 @@ const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const cleanCSS = require('gulp-clean-css');
 gulp.task('scripts', function() {
-    return gulp.src(['src/js/url_exist.js', 'src/js/*.js'])
+    return gulp.src(['src/js/mathjax.js', 'url_exist.js' ,'src/js/*.js'])
         .pipe(concat('javascript.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
