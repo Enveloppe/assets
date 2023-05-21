@@ -84,7 +84,7 @@ window.onload = function () {
   let doc = frameElement.contentDocument || frameElement.contentWindow.document;
   let css = document.createElement("link");
   css.rel = "stylesheet";
-  css.href = "css/template/utils.css";
+  css.href = "https://cdn.jsdelivr.net/gh/ObsidianPublisher/assets/dist/styles.css";
   css.type = "text/css";
   doc.head.appendChild(css);
   const theme = document.querySelector("[data-md-color-scheme]");
