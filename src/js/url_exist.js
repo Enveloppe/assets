@@ -1,68 +1,62 @@
-function UrlExists(url, type_url) {
-  let ref = "";
-  let title = "";
-  if (type_url === 0) {
-    ref = url.href;
-    title = url.title;
-  } else if (type_url === 1) {
-    ref = url.src;
-    title = url.alt;
-  }
-  if (ref.match(/index$/)) {
-    ref = ref.replace(/index$/, "");
-  }
-  if (ref.includes("%5C")) {
-    ref = ref.replace(/%5C/g, "/");
-  }
-  if (ref.match(/\.md\/$/)) {
-    ref = ref.replace(/\.md\/$/, "/");
-  }
-  ref = decodeURI(ref);
-  if (type_url === 0) {
-    url.href = ref;
-    url.title = title;
-    if (title.length === 0) {
-      title = url.innerText;
-      url.title = title;
-    }
-  } else if (type_url === 1) {
-    url.src = ref;
-    url.alt = title;
-  }
+/**
+ * Use search/all_files.json to check if the url exists
+ * @param {URL} url 
+ * @param {string} ref
+ * @param {string} title
+ */
+function checkIfInternalLinksExists(ref, title, url) {
+    //return if the url is not internal
+    //verify by checking if the url starts with the blog url
 
-  var http = new XMLHttpRequest();
-  http.open("GET", ref, true);
-  http.onload = function (e) {
-    if (http.status == "404") {
-      const newItem = document.createElement("div");
-      newItem.innerHTML = title;
-      newItem.classList.add("not_found");
-      newItem.setAttribute("href", ref);
-      try {
-        url.parentNode.replaceChild(newItem, url);
-      } catch (error) {
-        // console.log(error)
-      }
-    } else {
-      return true;
-    }
-  };
-  http.send();
+    fetch("/search/all_files.json")
+        .then((response) => response.json())
+        .then((json) => {
+
+            let cleanURL = url.href.replace(url.host, "").replace(/http(s)?:(\/){1,3}/gi, "");
+            cleanURL = cleanURL.length === 0 ? "./" : cleanURL;
+            const test = json.some((doc) => {
+                return decodeURI(doc.url) === decodeURI(cleanURL);
+            });
+
+            if (!test) {
+                console.log(`${decodeURI(cleanURL)} does not exist`)
+                const newItem = document.createElement("div");
+                newItem.innerHTML = title;
+                newItem.classList.add("not_found");
+                newItem.setAttribute("href", ref);
+                try {
+                    url.parentNode.replaceChild(newItem, url);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 }
 
 var p_search = /\.{2}\//gi;
 var ht = document.querySelectorAll("a:not(img)");
-for (var i = 0; i < ht.length; i++) {
-  if (
-    !ht[i].getElementsByTagName("img").length > 0 &&
-    !ht[i].getElementsByTagName("svg").length > 0
-  ) {
-    var link = UrlExists(ht[i], 0);
-  }
+for (const anchor of ht) {
+    if (
+        !anchor.getElementsByTagName("img").length > 0 &&
+        !anchor.getElementsByTagName("svg").length > 0 &&
+        !anchor.href.includes("#") &&
+        anchor.hostname === window.location.hostname
+    ) {
+        var link = parseURL(anchor, 0);
+        checkIfInternalLinksExists(link.ref, link.title, anchor);
+    }
 }
 
 var p_img = /\.+\\/gi;
 var img = document.querySelectorAll("img");
-for (var i = 0; i < img.length; i++) {
-  var link = UrlExists(img[i], 1);
+for (const image of img) {
+    if (image.hostname === window.location.hostname) {
+        var link = parseURL(image, 1);
+        checkIfInternalLinksExists(link.ref, link.title, image);
+    }
 }
+
