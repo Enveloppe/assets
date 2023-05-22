@@ -1,4 +1,49 @@
 /**
+ * Correct some bug in mkdocs creation for links
+ * @param {URL} url 
+ * @param {number} typeURL 
+ * @returns 
+ */
+function parseURL(url, typeURL) {
+
+    let ref = "";
+    let title = "";
+    if (typeURL === 0) {
+        ref = url.href;
+        title = url.title;
+    } else if (type_url === 1) {
+        ref = url.src;
+        title = url.alt;
+    }
+    if (ref.match(/index$/)) {
+        ref = ref.replace(/index$/, "");
+    }
+    if (ref.includes("%5C")) {
+        ref = ref.replace(/%5C/g, "/");
+    }
+    if (ref.match(/\.md\/$/)) {
+        ref = ref.replace(/\.md\/$/, "/");
+    }
+    ref = decodeURI(ref);
+    if (typeURL === 0) {
+        url.href = ref;
+        url.title = title;
+        if (title.length === 0) {
+            title = url.innerText;
+            url.title = title;
+        }
+    } else if (typeURL === 1) {
+        url.src = ref;
+        url.alt = title;
+    }
+    return {
+        title: title,
+        ref: ref,
+        url: url
+    };
+}
+
+/**
  * Use search/all_files.json to check if the url exists
  * @param {URL} url 
  * @param {string} ref
