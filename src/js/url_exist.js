@@ -60,7 +60,7 @@ function checkIfInternalLinksExists(ref, title, url) {
             let cleanURL = url.href.replace(url.host, "").replace(/http(s)?:(\/){1,3}/gi, "");
             cleanURL = cleanURL.length === 0 ? "./" : cleanURL;
             const test = json.some((doc) => {
-                return decodeURI(doc.url) === decodeURI(cleanURL);
+                return decodeURI(doc.url).toLowerCase() === decodeURI(cleanURL).toLocaleLowerCase();
             });
 
             if (!test) {
