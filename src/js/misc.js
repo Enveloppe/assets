@@ -47,18 +47,19 @@ for (var i = 0; i < img.length; i++) {
   }
 }
 
-var ht = document.querySelectorAll(
+//remove ^id from contents ; 
+// Only work in the form of "content ^id" (and ^id must end the lines)
+const article = document.querySelectorAll(
   "article.md-content__inner.md-typeset > *:not(.highlight)"
 );
-var scr = /\^\w+\s*$/gi;
-for (var i = 0; i < ht.length; i++) {
-  const fp = ht[i].innerText.match(scr);
-  if (fp) {
-    ht[i].innerHTML = ht[i].innerText.replace(fp, "");
+const embed_id_regex = /\^\w+\s*$/gi;
+for (let i = 0; i < article.length; i++) {
+  const embed_id = article[i].innerText.match(embed_id_regex);
+  if (embed_id) {
+    article[i].innerHTML = article[i].innerText.replace(embed_id, "");
   }
 }
-document.innerText = ht; 
-
+document.innerText = article; 
 
 var cite = document.querySelectorAll(".citation");
 if (cite) {
