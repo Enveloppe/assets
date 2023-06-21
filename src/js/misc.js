@@ -50,14 +50,15 @@ for (var i = 0; i < img.length; i++) {
 var ht = document.querySelectorAll(
   "article.md-content__inner.md-typeset > *:not(.highlight)"
 );
-var scr = /\^(.*)/gi;
+var scr = /\^\w+\s*$/gi;
 for (var i = 0; i < ht.length; i++) {
-  const fp = ht[i].innerHTML.match(scr);
+  const fp = ht[i].innerText.match(scr);
   if (fp) {
-    ht[i].innerHTML = ht[i].innerHTML.replace(fp, "");
+    ht[i].innerHTML = ht[i].innerText.replace(fp, "");
   }
 }
-document.innerHTML = ht;
+document.innerText = ht; 
+
 
 var cite = document.querySelectorAll(".citation");
 if (cite) {
