@@ -1,3 +1,9 @@
+/**
+ * @file MathJax
+ * @see Material for MkDocs: https://squidfunk.github.io/mkdocs-material/
+ * @description Must be loaded BEFORE polyfills.js scripts
+ */
+
 window.MathJax = {
   tex: {
     inlineMath: [["\\(", "\\)"]],

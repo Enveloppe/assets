@@ -1,3 +1,10 @@
+/**
+ * @file Comments
+ * @see https://chirpy.dev/
+ * @description Comments adapted to Mkdocs Material theme
+ * Allow to switch light/dark theme while using Mkdocs Material theme button
+ */
+
 const mkDocsChirpyTranslator = {
   default: "light",
   slate: "dark",

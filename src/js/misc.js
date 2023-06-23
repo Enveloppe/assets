@@ -1,3 +1,8 @@
+/**
+ * @file Misc
+ * @description Various file links and patch I was to lazy to do in mkdocs
+ */
+
 //patch a href attributes
 const header_links = document.querySelectorAll('a[href*="#"]');
 if (header_links) {
