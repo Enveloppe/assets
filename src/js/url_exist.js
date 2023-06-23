@@ -1,4 +1,10 @@
 /**
+ * @file URLEXIST
+ * @overview Check if the url exists
+ * @description Create a special class & remove link if the url does not exist
+ */
+
+/**
  * Correct some bug in mkdocs creation for links
  * @param {URL} url 
  * @param {number} typeURL 
@@ -48,40 +54,47 @@ function parseURL(url, typeURL) {
  * @param {URL} url 
  * @param {string} ref
  * @param {string} title
+ * @param {string[]} history
+ * @returns {string[]} history
  */
-function checkIfInternalLinksExists(ref, title, url) {
+function checkIfInternalLinksExists(ref, title, url, history) {
     //return if the url is not internal
     //verify by checking if the url starts with the blog url
-
-    fetch("/search/all_files.json")
-        .then((response) => response.json())
-        .then((json) => {
-
-            let cleanURL = url.href.replace(url.host, "").replace(/http(s)?:(\/){1,3}/gi, "").replace(/^\//, "");
-            cleanURL = cleanURL.trim().length === 0 ? "./" : cleanURL;
-            const test = json.some((doc) => {
-                return decodeURI(doc.url).toLowerCase() === decodeURI(cleanURL).toLocaleLowerCase();
+    let cleanURL = url.href.replace(url.host, "").replace(/http(s)?:(\/){1,3}/gi, "").replace(/^\//, "");
+    cleanURL = cleanURL.trim().length === 0 ? "./" : decodeURI(cleanURL).toLowerCase();
+    if (!history.includes(cleanURL.replace(/\/$/, "")) && cleanURL !== "./") {
+        fetch("/search/all_files.json")
+            .then((response) => response.json())
+            .then((json) => {
+                json.forEach((doc) => {
+                    const docURL = decodeURI(doc.url).toLowerCase();
+                    if (docURL === cleanURL) {
+                        history.push(cleanURL.replace(/\/$/, ""));
+                        return history;
+                    }
+                });
+                history = [...new Set(history)];
+                if (!history.includes(cleanURL.replace(/\/$/, "")) && cleanURL !== "./") {
+                    const newItem = document.createElement("div");
+                    newItem.innerHTML = title;
+                    newItem.classList.add("not_found");
+                    newItem.setAttribute("href", ref);
+                    try {
+                        url.parentNode.replaceChild(newItem, url);
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+                }
+            })
+            .catch((error) => {
+                console.log(error);
             });
-
-            if (!test) {
-                console.log(`${decodeURI(cleanURL)} does not exist`)
-                const newItem = document.createElement("div");
-                newItem.innerHTML = title;
-                newItem.classList.add("not_found");
-                newItem.setAttribute("href", ref);
-                try {
-                    url.parentNode.replaceChild(newItem, url);
-                }
-                catch (error) {
-                    console.log(error);
-                }
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    }
+    return history;
 }
 
+let history = [];
 var p_search = /\.{2}\//gi;
 var ht = document.querySelectorAll("a:not(img)");
 for (const anchor of ht) {
@@ -92,7 +105,7 @@ for (const anchor of ht) {
         anchor.hostname === window.location.hostname
     ) {
         var link = parseURL(anchor, 0);
-        checkIfInternalLinksExists(link.ref, link.title, anchor);
+        history = checkIfInternalLinksExists(link.ref, link.title, anchor, history);
     }
 }
 
@@ -101,7 +114,6 @@ var img = document.querySelectorAll("img");
 for (const image of img) {
     if (image.hostname === window.location.hostname) {
         var link = parseURL(image, 1);
-        checkIfInternalLinksExists(link.ref, link.title, image);
+        history = checkIfInternalLinksExists(link.ref, link.title, image, history);
     }
 }
-
