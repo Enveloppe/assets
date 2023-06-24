@@ -1,3 +1,5 @@
+/*----- not found -----*/
+
 .not_found {
   background-color: rgba(211, 211, 211, 0.521);
   display: inline-block;
@@ -26,6 +28,8 @@
   filter: saturate(200%);
 }
 
+/* ------ CITATION ------ */
+
 [data-md-color-scheme="default"] .citation {
   background-color: rgba(0, 0, 0, 0.1) !important;
 }
@@ -45,10 +49,11 @@
   float: left;
 }
 
-.citation > * {
-  margin: 0 !important;
+a.link-citation + * {
+  margin-top: 0;
 }
 
+/* ------ password --------- */
 code {
   display: inline-block;
 }
@@ -80,6 +85,8 @@ code {
   width: 5%;
 }
 
+/* ------ tippy --------- */
+
 .tippy {
   overflow: hidden !important;
   height: 5%;
@@ -106,6 +113,8 @@ code {
 .dark {
   background-color: var(--md-default-bg-color);
 }
+
+/* ------ graph --------- */
 
 #mynetwork {
   border: none !important;
