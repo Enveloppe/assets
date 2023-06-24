@@ -21,9 +21,29 @@ jobs:
     - run: npm run gulp
     - name: push
       continue-on-error: true
+      if: ${{ !env.ACT }}
       run: |
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
         git add dist/
         git commit -m "Deploy distribition files"
         git push
+    - name: Semantic Release
+      id: tag
+      uses: hennejg/github-tag-action@v4.3.1
+      with:
+        github_token : ${{ secrets.GITHUB_TOKEN }}
+        tag_prefix: ""
+    - name: release if new tags
+      uses: softprops/action-gh-release@v1
+      env: 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VERSION: ${{ steps.tag.outputs.new_tag }}
+      with:
+        tag_name: ${{ steps.tag.outputs.new_tag }}
+        name: ${{ steps.tag.outputs.new_tag }}
+        body: ${{ steps.tag.outputs.changelog }}
+        files: |
+          dist/*
+
+
