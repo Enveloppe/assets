@@ -81,25 +81,41 @@ if (cite) {
   }
 }
 
-//get iframe from graph.md
-// check if page is graph.md
 window.onload = function () {
   let frameElement = document.querySelector("iframe");
   if (!frameElement) {
     return;
   }
+  /** get all file in assets/stylesheets */
+  let fileInStylesheets = [];
+  let files = document.querySelectorAll("link");
+  files.forEach((file) => {
+    if (file.href.endsWith(".css")) {
+      fileInStylesheets.push(file.href);
+    }
+  });
   let doc = frameElement.contentDocument || frameElement.contentWindow.document;
-  let css = document.createElement("link");
-  css.rel = "stylesheet";
-  css.href = "https://cdn.jsdelivr.net/gh/ObsidianPublisher/assets@main/dist/styles.css";
-  css.type = "text/css";
-  doc.head.appendChild(css);
+  /**
+   * add all file in assets/stylesheets to iframe
+   */
+  fileInStylesheets.forEach((file) => {
+    let link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = file;
+    link.type = "text/css";
+    doc.head.appendChild(link);
+  });
   const theme = document.querySelector("[data-md-color-scheme]");
+  /** get slate bg */
+
   if (theme.getAttribute("data-md-color-scheme") === "default") {
     doc.body.setAttribute("class", "light");
   } else {
     doc.body.setAttribute("class", "dark");
+    const bgColor = getComputedStyle(theme).getPropertyValue("--md-default-bg-color");
+    doc.body.style.setProperty("--md-default-bg-color", bgColor);
   }
+  doc.body.classList.add("graph-view");
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === "attributes") {
