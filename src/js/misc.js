@@ -36,19 +36,25 @@ function getHeightWidth(alt) {
 
 var p_img = /\.+\\/gi;
 var img = document.querySelectorAll("img");
-for (var i = 0; i < img.length; i++) {
+for (const i of img) {
   var regAlt = new RegExp("\\|");
-  if (img[i].alt.match(regAlt)) {
-    const alt = img[i].alt.split("|");
-    for (var part of alt) {
+  const alt = i.alt;
+  if (alt.match(regAlt)) {
+    const altSplitted = alt.split("|");
+    for (const part of altSplitted) {
       if (part.match(new RegExp("\\d+", "g"))) {
         var size = getHeightWidth(part);
-        img[i].width = size[0] > 0 ? size[0] : img[i].width;
-        img[i].height = size[1] > 0 ? size[1] : img[i].height;
+        i.width = size[0] > 0 ? size[0] : i.width;
+        i.height = size[1] > 0 ? size[1] : i.height;
         var partReg = new RegExp(`\\${part}`);
-        img[i].alt = img[i].alt.replace(partReg, "");
+        i.alt = alt.replace(partReg, "");
       }
     }
+  } else if (alt.match(/\d+/g)) {
+    var size = getHeightWidth(alt);
+    i.width = size[0] > 0 ? size[0] : i.width;
+    i.height = size[1] > 0 ? size[1] : i.height;
+    i.alt = alt.replace(p_img, "");
   }
 }
 
