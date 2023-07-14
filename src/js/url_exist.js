@@ -62,15 +62,19 @@ function checkIfInternalLinksExists(ref, title, url, history) {
     //verify by checking if the url starts with the blog url
     let cleanURL = url.href.replace(url.host, "").replace(/http(s)?:(\/){1,3}/gi, "").replace(/^\//, "");
     cleanURL = cleanURL.trim().length === 0 ? "./" : decodeURI(cleanURL).toLowerCase();
+    const part = window.location.pathname;
+    /** get last part of the url, like wiki in 127.0.0.1:8000/wiki/ */
+    cleanURL = cleanURL.replace(part.replace(/^\//, ""), "");
+
     if (!history.includes(cleanURL.replace(/\/$/, "")) && cleanURL !== "./") {
-        fetch("/search/all_files.json")
+        fetch(`${part}/search/all_files.json`)
             .then((response) => response.json())
             .then((json) => {
                 json.forEach((doc) => {
                     const docURL = decodeURI(doc.url).toLowerCase();
+                    console.log(docURL, "----------", cleanURL)
                     if (docURL === cleanURL) {
                         history.push(cleanURL.replace(/\/$/, ""));
-                        return history;
                     }
                 });
                 history = [...new Set(history)];
