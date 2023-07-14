@@ -1,5 +1,5 @@
 Add theses links to your mkdocs.yml:
-```
+```yaml
 extra_javascript:
 - https://cdn.jsdelivr.net/gh/ObsidianPublisher/assets@main/dist/javascript.js
 
