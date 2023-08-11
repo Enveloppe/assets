@@ -34,10 +34,10 @@ function getHeightWidth(alt) {
   }
 }
 
-var p_img = /\.+\\/gi;
-var img = document.querySelectorAll("img");
+const p_img = /\.+\\/gi;
+const img = document.querySelectorAll("img");
 for (const i of img) {
-  var regAlt = new RegExp("\\|");
+  const regAlt = new RegExp("\\|");
   const alt = i.alt;
   if (alt.match(regAlt)) {
     const altSplitted = alt.split("|");
@@ -64,21 +64,21 @@ const article = document.querySelectorAll(
   "article.md-content__inner.md-typeset > *:not(.highlight)"
 );
 const embed_id_regex = /\^\w+\s*$/gi;
-for (let i = 0; i < article.length; i++) {
-  const embed_id = article[i].innerText.match(embed_id_regex);
+for (const element of article) {
+  const embed_id = element.innerText.match(embed_id_regex);
   if (embed_id) {
-    article[i].innerHTML = article[i].innerText.replace(embed_id, "");
+    element.innerHTML = element.innerText.replace(embed_id, "");
   }
 }
 document.innerText = article; 
 
-var cite = document.querySelectorAll(".citation");
+const cite = document.querySelectorAll(".citation");
 if (cite) {
   for (var i = 0; i < cite.length; i++) {
-    var img = cite[i].innerHTML.match(/!?(\[{2}|\[).*(\]{2}|\))/gi);
-    if (img) {
-      for (var j = 0; j < img.length; j++) {
-        cite[i].innerHTML = cite[i].innerHTML.replace(img[j], "");
+    const img_cite = cite[i].innerHTML.match(/!?(\[{2}|\[).*(\]{2}|\))/gi);
+    if (img_cite) {
+      for (var j = 0; j < img_cite.length; j++) {
+        cite[i].innerHTML = cite[i].innerHTML.replace(img_cite[j], "");
       }
       if (cite[i].innerText.trim().length < 2) {
         cite[i].style.display = "none";
@@ -88,24 +88,21 @@ if (cite) {
 }
 
 window.onload = function () {
-  let frameElement = document.querySelector("iframe");
+  const frameElement = document.querySelector("iframe");
   if (!frameElement) {
     return;
   }
   /** get all file in assets/stylesheets */
-  let fileInStylesheets = [];
-  let files = document.querySelectorAll("link");
+  const fileInStylesheets = [];
+  const files = document.querySelectorAll("link");
   files.forEach((file) => {
     if (file.href.endsWith(".css")) {
       fileInStylesheets.push(file.href);
     }
   });
-  let doc = frameElement.contentDocument || frameElement.contentWindow.document;
-  /**
-   * add all file in assets/stylesheets to iframe
-   */
+  const doc = frameElement.contentDocument || frameElement.contentWindow.document;
   fileInStylesheets.forEach((file) => {
-    let link = document.createElement("link");
+    const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = file;
     link.type = "text/css";
@@ -122,24 +119,10 @@ window.onload = function () {
     doc.body.style.setProperty("--md-default-bg-color", bgColor);
   }
   doc.body.classList.add("graph-view");
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === "attributes") {
-        doc.body.setAttribute(
-          "class",
-          mkDocsChirpyTranslator[theme.dataset.mdColorScheme]
-        );
-      }
-    });
-  });
-  observer.observe(theme, {
-    attributes: true,
-    attributeFilter: ["data-md-color-scheme"],
-  });
 };
 
-var paletteSwitcher1 = document.getElementById("__palette_1");
-var paletteSwitcher2 = document.getElementById("__palette_2");
+const paletteSwitcher1 = document.getElementById("__palette_1");
+const paletteSwitcher2 = document.getElementById("__palette_2");
 
 const isMermaidPage = document.querySelector(".mermaid");
 if (isMermaidPage) {
