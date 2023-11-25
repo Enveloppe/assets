@@ -1,5 +1,5 @@
 {
-  "name": "Assets",
+  "name": "assets",
   "version": "1.0.0",
   "scripts": {
     "gulp": "gulp"

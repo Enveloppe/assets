@@ -6,9 +6,9 @@
 
 /**
  * Correct some bug in mkdocs creation for links
- * @param {URL} url 
- * @param {number} typeURL 
- * @returns 
+ * @param {URL} url
+ * @param {number} typeURL
+ * @returns
  */
 function parseURL(url, typeURL) {
 
@@ -17,7 +17,7 @@ function parseURL(url, typeURL) {
     if (typeURL === 0) {
         ref = url.href;
         title = url.title;
-    } else if (type_url === 1) {
+    } else if (typeURL === 1) {
         ref = url.src;
         title = url.alt;
     }
@@ -43,15 +43,15 @@ function parseURL(url, typeURL) {
         url.alt = title;
     }
     return {
-        title: title,
-        ref: ref,
-        url: url
+        title,
+        ref,
+        url
     };
 }
 
 /**
  * Use search/all_files.json to check if the url exists
- * @param {URL} url 
+ * @param {URL} url
  * @param {string} ref
  * @param {string} title
  * @param {string[]} history
@@ -63,7 +63,7 @@ function checkIfInternalLinksExists(ref, title, url, history) {
     let cleanURL = url.href.replace(url.host, "").replace(/http(s)?:(\/){1,3}/gi, "").replace(/^\//, "");
     cleanURL = cleanURL.trim().length === 0 ? "./" : decodeURI(cleanURL).toLowerCase();
     const blogURL = document.querySelector('meta[name="site_url"]').content;
-    const part = blogURL.split("/").filter((part) => part.length > 0).pop() + "/";
+    const part = `${blogURL.split("/").filter((part) => part.length > 0).pop()}/`;
 
     /** get last part of the url, like wiki in 127.0.0.1:8000/wiki/ */
     cleanURL = cleanURL.replace(part.replace(/^\//, ""), "");
@@ -100,8 +100,7 @@ function checkIfInternalLinksExists(ref, title, url, history) {
 }
 
 let history = [];
-var p_search = /\.{2}\//gi;
-var ht = document.querySelectorAll("a:not(img)");
+const ht = document.querySelectorAll("a:not(img)");
 for (const anchor of ht) {
     if (
         !anchor.getElementsByTagName("img").length > 0 &&
@@ -114,8 +113,7 @@ for (const anchor of ht) {
     }
 }
 
-var p_img = /\.+\\/gi;
-var img = document.querySelectorAll("img");
+const img = document.querySelectorAll("img");
 for (const image of img) {
     if (image.hostname === window.location.hostname) {
         var link = parseURL(image, 1);

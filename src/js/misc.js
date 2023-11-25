@@ -58,7 +58,7 @@ for (const i of img) {
   }
 }
 
-//remove ^id from contents ; 
+//remove ^id from contents ;
 // Only work in the form of "content ^id" (and ^id must end the lines)
 const article = document.querySelectorAll(
   "article.md-content__inner.md-typeset > *:not(.highlight)"
@@ -70,15 +70,15 @@ for (const element of article) {
     element.innerHTML = element.innerText.replace(embed_id, "");
   }
 }
-document.innerText = article; 
+document.innerText = article;
 
 const cite = document.querySelectorAll(".citation");
 if (cite) {
   for (var i = 0; i < cite.length; i++) {
     const img_cite = cite[i].innerHTML.match(/!?(\[{2}|\[).*(\]{2}|\))/gi);
     if (img_cite) {
-      for (var j = 0; j < img_cite.length; j++) {
-        cite[i].innerHTML = cite[i].innerHTML.replace(img_cite[j], "");
+      for (const element of img_cite) {
+        cite[i].innerHTML = cite[i].innerHTML.replace(element, "");
       }
       if (cite[i].innerText.trim().length < 2) {
         cite[i].style.display = "none";
@@ -126,11 +126,11 @@ const paletteSwitcher2 = document.getElementById("__palette_2");
 
 const isMermaidPage = document.querySelector(".mermaid");
 if (isMermaidPage) {
-  paletteSwitcher1.addEventListener("change", function () {
+  paletteSwitcher1.addEventListener("change", () => {
     location.reload();
   });
 
-  paletteSwitcher2.addEventListener("change", function () {
+  paletteSwitcher2.addEventListener("change", () => {
     location.reload();
   });
 }
