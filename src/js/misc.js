@@ -35,8 +35,7 @@ function getHeightWidth(alt) {
 }
 
 const p_img = /\.+\\/gi;
-const img = document.querySelectorAll("img");
-for (const i of img) {
+for (const i of document.querySelectorAll("img")) {
   const regAlt = new RegExp("\\|");
   const alt = i.alt;
   if (alt.match(regAlt)) {

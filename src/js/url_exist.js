@@ -113,10 +113,9 @@ for (const anchor of ht) {
     }
 }
 
-const img = document.querySelectorAll("img");
-for (const image of img) {
-    if (image.hostname === window.location.hostname) {
-        var link = parseURL(image, 1);
-        history = checkIfInternalLinksExists(link.ref, link.title, image, history);
-    }
+for (const image of document.querySelectorAll("img")) {
+  if (image.hostname === window.location.hostname) {
+    var link = parseURL(image, 1);
+    history = checkIfInternalLinksExists(link.ref, link.title, image, history);
+  }
 }
