@@ -100,7 +100,9 @@ function checkIfInternalLinksExists(ref, title, url, history) {
 }
 
 let history = [];
-const ht = document.querySelectorAll("a:not(img)");
+const ht = document.querySelectorAll(
+  "article a:not(img, .headerlink)"
+);
 for (const anchor of ht) {
     if (
         !anchor.getElementsByTagName("img").length > 0 &&
