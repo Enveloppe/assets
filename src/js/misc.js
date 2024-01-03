@@ -35,8 +35,8 @@ function getHeightWidth(alt, originalWidth, originalHeight) {
     return {width, height};
   } else if (alt.match(/\d+/i)) {
     const width = parseInt(alt.match(widthReg)[0]);
-    return {width, height: originalHeight];
-  } 
+    return {width, height: originalHeight};
+  }
   return {width: originalWidth, height: originalHeight};
 }
 
