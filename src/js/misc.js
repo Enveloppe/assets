@@ -54,6 +54,11 @@ for (const i of document.querySelectorAll("img")) {
         i.alt = alt.replace(partReg, "");
       }
     }
+  } else if (alt !== i.title && alt.match(/^\d+(x\d+)?|\|\d+(x\d+)/g)) {
+    const size = getHeightWidth(alt, i.width, i.height);
+    i.width = size[0] > 0 ? size[0] : i.width;
+    i.height = size[1] > 0 ? size[1] : i.height;
+    i.alt = alt.replace(/^\d+(x\d+)?|\|\d+(x\d+)?/gi, "");
   }
 }
 
