@@ -23,42 +23,31 @@ if (header_links) {
  * @param {string} alt
  * @param {number} originalWidth
  * @param {number} originalHeight
- * @returns number[]
+ * @returns {width: number, height: number}
  */
 function getHeightWidth(alt, originalWidth, originalHeight) {
-  const heightXwidthReg = new RegExp("\\d+x\\d+");
   const widthReg = new RegExp("\\d+");
-  if (alt.match(heightXwidthReg)) {
-    const width = parseInt(alt.split("x")[0]);
-    const height = parseInt(alt.split("x")[1]);
-    return [width, height];
-  } else if (alt.match(widthReg)) {
+  if (alt.match(/\d+x\d+/i)) {
+    let width = parseInt(alt.split("x")[0]);
+    width = width > 0 ? width : originalWidth
+    let height = parseInt(alt.split("x")[1]);
+    height = height > 0 ? height : originalHeight
+    return {width, height};
+  } else if (alt.match(/\d+/i)) {
     const width = parseInt(alt.match(widthReg)[0]);
-    return [width, originalHeight];
-  } else {
-    return [originalWidth, originalHeight];
-  }
+    return {width, height: originalHeight];
+  } 
+  return {width: originalWidth, height: originalHeight};
 }
 
 for (const i of document.querySelectorAll("img")) {
-  const regAlt = new RegExp("\\|");
   const alt = i.alt;
-  if (alt.match(regAlt)) {
-    const altSplitted = alt.split("|");
-    for (const part of altSplitted) {
-      if (part.match(new RegExp("\\d+", "g"))) {
-        var size = getHeightWidth(part, i.width, i.height);
-        i.width = size[0] > 0 ? size[0] : i.width;
-        i.height = size[1] > 0 ? size[1] : i.height;
-        var partReg = new RegExp(`\\${part}`);
-        i.alt = alt.replace(partReg, "");
-      }
-    }
-  } else if (alt !== i.title && alt.match(/^\d+(x\d+)?|\|\d+(x\d+)/g)) {
-    const size = getHeightWidth(alt, i.width, i.height);
-    i.width = size[0] > 0 ? size[0] : i.width;
-    i.height = size[1] > 0 ? size[1] : i.height;
-    i.alt = alt.replace(/^\d+(x\d+)?|\|\d+(x\d+)?/gi, "");
+  const resize = /^\d+(x\d+)?|\|\d+(x\d+)/gi
+  if (alt.match(resize) && alt != i.title) {
+    const {width, height} = getHeightWidth(part, i.width, i.height);
+    i.width = width;
+    i.height = height;
+    i.alt = alt.replace(resize, "");
   }
 }
 
