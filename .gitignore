@@ -129,5 +129,6 @@ dmypy.json
 
 **/node_modules/*
 package-lock.json
+pnpm-lock.yaml
 
 **/.vscode
