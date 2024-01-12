@@ -101,7 +101,7 @@ function checkIfInternalLinksExists(ref, title, url, history) {
 
 let history = [];
 const ht = document.querySelectorAll(
-  "article a:not(img, .headerlink)"
+  "article:not(.md-post) a:not(img, .headerlink)"
 );
 for (const anchor of ht) {
     if (
